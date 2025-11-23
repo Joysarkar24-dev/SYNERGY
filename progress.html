@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progress | SYNERGY</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Neon Bar Styles */
+        .week-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(30,30,36,0.7);
+            border-radius: 4px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+        .bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #d400ff, #ff00ff);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        .bar-animate {
+            box-shadow: 0 0 10px #d400ff, 0 0 15px #ff00ff;
+        }
+        .week-bar-container {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<header class="navbar">
+    <div class="logo">SYNERGY</div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="plans.html">Plans</a>
+        <a href="progress.html" class="active">Progress</a>
+    </nav>
+</header>
+
+<section class="page-header animate-fade">
+    <h1>Your Progress Dashboard</h1>
+    <p>Monitor your improvements, streaks, and weekly insights.</p>
+</section>
+
+<section class="progress-container">
+
+    <!-- DAILY PROGRESS CARD -->
+    <div class="progress-card animate-up">
+        <h3>Daily Workout Completion</h3>
+        <div class="insight-bar">
+            <div id="dailyProgressFill" class="insight-fill"></div>
+        </div>
+        <p id="dailyPercent" class="progress-number">0%</p>
+        <button class="btn" onclick="updateDailyProgress()">Update Progress</button>
+    </div>
+
+    <!-- WEEKLY STREAK -->
+    <div class="progress-card animate-up">
+        <h3>Weekly Streak</h3>
+        <p id="streakDisplay">Streak: 0 days</p>
+        <button onclick="increaseStreak()" class="btn">Mark Completed</button>
+    </div>
+
+    <!-- WEEKLY PERFORMANCE INSIGHTS -->
+    <div class="progress-card animate-up">
+        <h3>Weekly Performance Insights</h3>
+        <div class="weekly-insight">
+            <div class="week-bar-container"><label>Mon</label><div class="week-bar"><div id="monBar" class="bar-fill"></div></div></div>
+            <div class="week-bar-container"><label>Tue</label><div class="week-bar"><div id="tueBar" class="bar-fill"></div></div></div>
+            <div class="week-bar-container"><label>Wed</label><div class="week-bar"><div id="wedBar" class="bar-fill"></div></div></div>
+            <div class="week-bar-container"><label>Thu</label><div class="week-bar"><div id="thuBar" class="bar-fill"></div></div></div>
+            <div class="week-bar-container"><label>Fri</label><div class="week-bar"><div id="friBar" class="bar-fill"></div></div></div>
+            <div class="week-bar-container"><label>Sat</label><div class="week-bar"><div id="satBar" class="bar-fill"></div></div></div>
+            <div class="week-bar-container"><label>Sun</label><div class="week-bar"><div id="sunBar" class="bar-fill"></div></div></div>
+        </div>
+        <p>Average Weekly Performance: <span id="weeklyAvgDisplay">0%</span></p>
+    </div>
+
+    <div class="circle-card">
+      <h3>Daily Completion</h3>
+      <div class="circle" id="dailyCircle">
+          <span id="dailyCircleText">0%</span>
+      </div>
+    </div>
+
+    <div class="circle-card">
+      <h3>Weekly Avg Performance</h3>
+      <div class="circle" id="weeklyCircle">
+          <span id="weeklyCircleText">0%</span>
+      </div>
+    </div>
+
+</section>
+
+<footer class="footer">© 2025 SYNERGY</footer>
+
+<script src="progress.js"></script>
+</body>
+</html>

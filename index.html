@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>SYNERGY — Personalized Workout Planner</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.cdnfonts.com/css/science-gothic" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+        --bg: #fdfaf6;  /* warm cream */
+        --panel: rgba(255,255,255,0.85);
+        --accent: #f8a170;  /* soft pastel orange */
+        --accent2: #ffd6a5; /* lighter warm accent */
+        --neon: #ffb085;    /* subtle glow for headings */
+        --muted: #333;      /* dark text for readability */
+    }
+
+    body {
+        background: var(--bg);
+        color: var(--muted);
+        font-family: 'Orbitron', sans-serif;
+    }
+
+    .main-bg {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      pointer-events: none;
+      background: url('css/images/gym.jpg') center center/cover no-repeat;
+      opacity: 0.15;
+      filter: brightness(1.1) grayscale(0.2);
+    }
+
+    body > *:not(.main-bg) { position: relative; z-index: 1; }
+
+    /* ================= Navbar ================= */
+    .navbar {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 1rem 2rem; background: rgba(255,255,255,0.7); backdrop-filter: blur(6px);
+    }
+    .nav-links a {
+      color: var(--muted);
+      margin: 0 1rem;
+      text-decoration: none;
+      font-weight: 600;
+      transition: color 0.3s, text-shadow 0.3s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      color: var(--accent);
+      text-shadow: 0 0 10px var(--accent2);
+    }
+
+    /* ================= Hero ================= */
+    .hero {
+      text-align: center; color: var(--muted); padding: 6rem 2rem 4rem;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      text-shadow: 0 0 8px var(--neon);
+    }
+    .hero p {
+      font-size: 1.2rem;
+      margin: 1rem 0 2rem;
+      text-shadow: 0 0 3px rgba(0,0,0,0.1);
+    }
+    .hero .btn {
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #fff; border: none; padding: 0.8rem 2rem; border-radius: 12px;
+      font-weight: 600; cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .hero .btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 12px var(--accent2), 0 0 25px var(--accent);
+    }
+
+    /* ================= Feature Cards ================= */
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+    }
+    .feature-card {
+      background: var(--panel); padding: 1.5rem; border-radius: 15px; text-align: center;
+      color: var(--muted); transition: transform 0.3s, box-shadow 0.3s; backdrop-filter: blur(6px);
+    }
+    .feature-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 0 12px var(--accent2), 0 0 20px var(--accent);
+    }
+
+    /* ================= Routine Grid ================= */
+    .routine-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 2rem;
+    }
+
+    /* ================= Habit Streaks ================= */
+    .streak-container, .reminder-container {
+      background: var(--panel);
+      color: var(--muted);
+      padding: 1.5rem;
+      margin: 1rem 2rem;
+      border-radius: 15px;
+      text-align: center;
+      backdrop-filter: blur(6px);
+    }
+    .btn { cursor: pointer; }
+
+    /* ================= Footer ================= */
+    .footer {
+      text-align: center; padding: 1.5rem 2rem; color: var(--muted);
+      background: rgba(255,255,255,0.7); backdrop-filter: blur(6px);
+    }
+
+    /* ========== Modal Styling ========== */
+    .auth-modal { display: none; position: fixed; inset:0; z-index:1000; justify-content:center; align-items:center; }
+    .auth-modal.active { display:flex; }
+    .auth-modal-content { background: var(--panel); padding:2rem; border-radius:15px; max-width:400px; width:90%; }
+    .modal-close { background:none; border:none; font-size:1.5rem; position:absolute; top:10px; right:10px; cursor:pointer; }
+    .overlay { position:fixed; inset:0; background:rgba(0,0,0,0.2); display:none; z-index:999; }
+    .overlay.active { display:block; }
+  </style>
+</head>
+<body>
+  <!-- Background image -->
+  <div class="main-bg" aria-hidden="true"></div>
+
+  <!-- HEADER -->
+  <header class="navbar">
+    <div class="logo" style="font-family: 'Science Gothic', sans-serif;">SYNERGY</div>
+    <nav class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="plans.html">Plans</a>
+      <a href="progress.html">Progress</a>
+    </nav>
+    <div class="auth-buttons" id="authButtonsArea">
+      <button id="openLogin" class="login-btn">Login</button>
+      <button id="openSignup" class="signup-btn">Sign Up</button>
+      <div id="userPreview" class="profile-preview hidden" aria-hidden="true">
+        <img id="userPhoto" src="css/images/default-avatar.png" class="profile-pic" alt="Profile" />
+        <span id="userNamePreview"></span>
+        <button id="logoutBtn" class="login-btn">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" aria-label="Main introduction">
+    <div class="hero-content animate-fade neon-hero" role="region" aria-label="hero content">
+      <h1>PLAN · PROGRESS · PREVAIL</h1>
+      <p>Your personalized workout companion with custom plans, progress tracking & motivation tools.</p>
+      <a href="plans.html" class="btn">Get Started</a>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features" aria-labelledby="featuresTitle">
+    <h2 id="featuresTitle" class="animate-up">What We Offer</h2>
+    <div class="feature-grid">
+      <div class="feature-card animate-up interactive-3d">
+        <h3>Personalized Plans</h3>
+        <p>Custom routines based on your goals, equipment & schedule.</p>
+      </div>
+      <div class="feature-card animate-up interactive-3d">
+        <h3>Daily Scheduling</h3>
+        <p>Smart timelines to help you stay consistent.</p>
+      </div>
+      <div class="feature-card animate-up interactive-3d">
+        <h3>Progress Tracking</h3>
+        <p>Analyze improvements with weekly insights.</p>
+      </div>
+      <div class="feature-card animate-up interactive-3d">
+        <h3>Habit Streaks</h3>
+        <p>Stay motivated with streak systems & reminders.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- RECOMMENDED ROUTINES -->
+  <section class="recommended-routines" aria-labelledby="recommendedTitle">
+    <h2 id="recommendedTitle">Recommended Routines & Schedules</h2>
+    <div id="routineContainer" class="routine-grid" aria-live="polite"></div>
+  </section>
+
+  <!-- HABIT STREAKS & REMINDERS -->
+  <section class="habit-streaks" aria-labelledby="habitTitle">
+    <h2 id="habitTitle">Habit Streaks & Reminders</h2>
+    <div class="streak-container" role="region" aria-label="streak">
+      <p id="streakDisplay">Streak: 0 days</p>
+      <button id="completeDay" class="btn">Complete Today's Workout</button>
+    </div>
+    <div class="reminder-container" role="region" aria-label="reminder">
+      <label for="reminderTime">Set Daily Reminder:</label>
+      <input type="time" id="reminderTime" />
+      <button id="setReminder" class="btn">Save Reminder</button>
+      <p class="small-muted">Browser notifications must be allowed for reminders to appear.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">© 2025 SYNERGY. All Rights Reserved.</footer>
+
+  <!-- OVERLAY for modals -->
+  <div id="overlay" class="overlay" aria-hidden="true"></div>
+
+  <!-- SIGNUP / LOGIN MODALS -->
+  <div id="signupModal" class="auth-modal" aria-hidden="true">
+    <div class="auth-modal-content" role="dialog" aria-modal="true" aria-labelledby="signupTitle">
+      <button class="modal-close" data-close="signupModal" aria-label="Close signup">&times;</button>
+      <h3 id="signupTitle">Create Account</h3>
+      <form id="signupForm" class="auth-form" autocomplete="on">
+        <label for="signupName">Full name</label>
+        <input id="signupName" name="name" type="text" required />
+        <label for="signupEmail">Email</label>
+        <input id="signupEmail" name="email" type="email" required />
+        <label for="signupPhone">Phone</label>
+        <input id="signupPhone" name="phone" type="tel" inputmode="tel" />
+        <label for="signupPassword">Password</label>
+        <input id="signupPassword" name="password" type="password" required />
+        <label><input id="autoLogin" type="checkbox" /> Keep me logged in</label>
+        <div class="auth-error" id="signupError" aria-live="polite"></div>
+        <button type="submit" class="btn">Create account</button>
+        <p style="margin-top:10px; font-size:13px;">Already have an account? <a href="#" id="openLoginFromSignup">Log in</a></p>
+      </form>
+    </div>
+  </div>
+
+  <div id="loginModal" class="auth-modal" aria-hidden="true">
+    <div class="auth-modal-content" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+      <button class="modal-close" data-close="loginModal" aria-label="Close login">&times;</button>
+      <h3 id="loginTitle">Login</h3>
+      <form id="loginForm" class="auth-form" autocomplete="on">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" name="email" type="email" required />
+        <label for="loginPassword">Password</label>
+        <input id="loginPassword" name="password" type="password" required />
+        <label><input id="rememberMe" type="checkbox" /> Keep me logged in</label>
+        <div class="auth-error" id="loginError" aria-live="polite"></div>
+        <button type="submit" class="btn">Login</button>
+        <p style="margin-top:10px; font-size:13px;">Don't have an account? <a href="#" id="openSignupFromLogin">Create one</a></p>
+      </form>
+    </div>
+  </div>
+
+  <!-- JS -->
+  <script src="jv.js"></script>
+</body>
+</html>

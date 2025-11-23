@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Workout Plan Generator</title>
+    <link rel="stylesheet" href="plans.css">
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    <div class="logo">SYNERGY</div>
+
+    <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="plan.html" class="active">Plans</a>
+        <a href="progress.html">Progress</a>
+        
+    </nav>
+
+    
+        <div class="profile-container">
+            <img src="https://i.ibb.co/8zCj1qB/user.png" class="profile-pic" id="profileIcon">
+
+            <div class="profile-dropdown" id="profileDropdown">
+                <a href="#">Profile</a>
+                <a href="#">Week Planner</a>
+                <a href="#">Nutrition</a>
+                <a href="#">My Plans</a>
+                <a href="#">Settings</a>
+        </div>
+    </div>
+</header>
+
+<!-- MAIN CARD -->
+<section class="card" style="margin:50px auto; max-width:900px;">
+    <h1 style="color:#b26cff; text-align:center;">Workout Plan Generator</h1>
+
+    <div class="form-box">
+        <label>Workout Type</label>
+        <select id="workoutType">
+            <option value="gym">Gym (Push Pull Legs)</option>
+            <option value="homeMix">Home + Minimal Equipment</option>
+            <option value="home">Home (No Equipment)</option>
+        </select>
+
+        <label>Goal</label>
+        <select id="goal">
+            <option value="strength">Strength</option>
+            <option value="hypertrophy">Muscle Gain</option>
+            <option value="fatloss">Fat Loss</option>
+        </select>
+
+        <label>Experience Level</label>
+        <select id="level">
+            <option value="beginner">Beginner</option>
+            <option value="intermediate">Intermediate</option>
+            <option value="advanced">Advanced</option>
+        </select>
+
+        <label>Days Per Week</label>
+        <select id="days">
+            <option value="3">3 Days</option>
+            <option value="4">4 Days</option>
+            <option value="5">5 Days</option>
+            <option value="6">6 Days</option>
+        </select>
+
+        <label>Time Available Per Session</label>
+        <select id="time">
+            <option value="30">30 Minutes</option>
+            <option value="45">45 Minutes</option>
+            <option value="60">1 Hour</option>
+            <option value="90">1 Hour 30 Minutes</option>
+            <option value="120">2 Hours</option>
+        </select>
+    </div>
+
+    <button class="generate-btn" onclick="openPlan()">Generate Plan</button>
+</section>
+
+<!-- MODAL -->
+<div class="modal" id="planModal">
+    <div class="modal-content">
+
+        <span class="close-btn" onclick="closePlan()">&times;</span>
+        <h2>Your Personalized Workout Plan</h2>
+
+        <!-- SCROLLABLE GENERATED PLAN -->
+        <div id="generatedPlan" class="scroll-box"></div>
+
+    </div>
+</div>
+
+<!-- JS -->
+<script src="workout.js"></script>
+
+<script>
+// PROFILE DROPDOWN
+document.getElementById("profileIcon").addEventListener("click", () => {
+    let menu = document.getElementById("profileDropdown");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+});
+
+// CLOSE DROPDOWN WHEN CLICKING OUTSIDE
+document.addEventListener("click", (e) => {
+    if (!e.target.closest(".profile-container")) {
+        document.getElementById("profileDropdown").style.display = "none";
+    }
+});
+</script>
+
+</body>
+</html>
